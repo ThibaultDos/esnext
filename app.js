@@ -123,9 +123,9 @@ class TripService {
     }
 }
 
-const rechercheTripName = new TripService();
-const promiseParis$ = rechercheTripName.findByName("Paris"); // promesse OK
-const promiseToulouse$ = rechercheTripName.findByName("Toulouse"); // promesse NOK
+const tripByName = new TripService();
+const promiseParis$ = tripByName.findByName("Paris"); // promesse OK
+const promiseToulouse$ = tripByName.findByName("Toulouse"); // promesse NOK
 
 promiseParis$
     .then(trip => console.log(`Trip found : ${trip.toString()}`))
@@ -142,7 +142,7 @@ class PriceService {
         this._priceMap = new Map();
         this._priceMap.set('paris', 100);
         this._priceMap.set('rio-de-janeiro', 800);
-        // no price for 'nantes'
+        this._priceMap.set('nantes'); // no price for 'nantes'
     }
 
     findPriceByTripId(tripId) {
@@ -167,11 +167,11 @@ class PriceService {
     }
 }
 
-const rechercheTripId = new PriceService();
+const priceById = new PriceService();
 // promesse OK
-const promiseRio$ = rechercheTripId.findPriceByTripId("rio-de-janeiro");
+const promiseRio$ = priceById.findPriceByTripId("rio-de-janeiro");
 // promesse NOK
-const promiseNantes$ = rechercheTripId.findPriceByTripId("Nantes");
+const promiseNantes$ = priceById.findPriceByTripId("Nantes");
 
 promiseRio$
     .then(price => console.log(`Price found : ${price}`))
@@ -180,3 +180,10 @@ promiseRio$
 promiseNantes$
     .then(price => console.log(`Price found : ${price}`))
     .catch((error) => console.error(`I AM ERROR.\n${error}`));
+
+// recherche de l'objet trip correspondant au nom entré en paramètre
+const promisePriceByName$ = tripByName.findByName("Rio de Janeiro"); 
+promisePriceByName$
+    .then(trip =>priceById.findPriceByTripId(`${trip._id}`))
+    .then(price => console.log(`Price found : ${price}`))
+    .catch((error) => console.error(`I AM ERROR.${error}`));
